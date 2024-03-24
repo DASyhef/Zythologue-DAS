@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+    database:
+        container_name: zythologie-database
+        image: mysql:latest
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: zythologie
+        ports:
+            - 3306:3306
+        volumes:
+            - db-data:/var/lib/mysql
+
+    phpmyadmin:
+        container_name: zythologie-phpmyadmin
+        image: phpmyadmin/phpmyadmin:latest
+        restart: always
+        ports:
+            - 3001:80
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=database
+            - PMA_USER=root
+            - PMA_PASSWORD=root
+
+volumes:
+    db-data:

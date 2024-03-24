@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "docker-start": "clear && docker-compose up -d --build && docker logs --tail 1000 --follow zythologie-database --details",
+        "docker-stop": "clear && docker-compose down",
+        "app-scripts": "echo 'Pas d'application à exécuter'",
+        "check:security": "echo 'Pas d'application à tester'",
+        "clear-all": "clear && docker system prune --all --force && docker volume prune --all --force"
+    }
+}
