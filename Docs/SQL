@@ -1,174 +1,104 @@
-DROP TABLE IF EXISTS Utilisateurs;
-CREATE TABLE Utilisateurs (
-    ID_Utilisateurs INT AUTO_INCREMENT NOT NULL,
-    Nom_Utilisateurs VARCHAR(255),
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+    ID_users INT AUTO_INCREMENT NOT NULL,
+    Name_users VARCHAR(255),
     EMail VARCHAR(255),
     Password_Utilisateurs VARCHAR(144),
-    Date_de_Création_Utilisateurs DATETIME,
-    Date_de_Modification_Utilisateurs DATETIME,
-    PRIMARY KEY (ID_Utilisateurs)
+    Creation_Date_users DATETIME,
+    Modification_Date_users DATETIME,
+    PRIMARY KEY (ID_users)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Bieres;
-CREATE TABLE Bieres (
-    ID_Bieres INT AUTO_INCREMENT NOT NULL,
+DROP TABLE IF EXISTS beer;
+CREATE TABLE beer (
+    ID_beer INT AUTO_INCREMENT NOT NULL,
+    Name_beer VARCHAR(144),
     Description_Bieres TEXT,
     ABV_Bieres NUMERIC,
-    Date_de_Creation_Bieres DATETIME,
-    Date_de_Modification DATETIME,
-    PRIMARY KEY (ID_Bieres)
+    Creation_Date_beer DATETIME,
+    Modification_Date_beer DATETIME,
+    ID_brewery INT, -- Remplacez par le nom de votre colonne réelle ou une contrainte de clé étrangère
+    ID_beer_category INT, -- Remplacez par le nom de votre colonne réelle ou une contrainte de clé étrangère
+    PRIMARY KEY (ID_beer)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Ingredients;
-CREATE TABLE Ingredients (
-    ID_Ingrédients INT AUTO_INCREMENT NOT NULL,
+DROP TABLE IF EXISTS ingredient;
+CREATE TABLE ingredient (
+    ID_ingredient INT AUTO_INCREMENT NOT NULL,
     Type_Avis VARCHAR(255),
-    Nom_Avis VARCHAR(255),
-    Date_de_Création_Ingrédients DATETIME,
-    Date_de_Modification_Ingrédients DATETIME,
-    PRIMARY KEY (ID_Ingrédients)
+    Name_ingredient VARCHAR(144),
+    Creation_Date_ingredient DATETIME,
+    Modification_Date_ingredient DATETIME,
+    PRIMARY KEY (ID_ingredient)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Categories_Bieres;
-CREATE TABLE Categories_Bieres (
-    ID_Catégories_Bieres INT AUTO_INCREMENT NOT NULL,
-    Nom_Catégories_Bieres VARCHAR(144),
-    Date_de_Creation_Categories_Bieres DATETIME,
-    Date_de_Modification DATETIME,
-    PRIMARY KEY (ID_Catégories_Bieres)
+DROP TABLE IF EXISTS beer_category;
+CREATE TABLE beer_category (
+    ID_beer_category INT AUTO_INCREMENT NOT NULL,
+    Name_beer_category VARCHAR(144),
+    Creation_Date_beer_category DATETIME,
+    Modification_Date_beer_category DATETIME,
+    PRIMARY KEY (ID_beer_category)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Brasseries;
-CREATE TABLE Brasseries (
-    ID_Brasseries INT AUTO_INCREMENT NOT NULL,
-    Nom_Brasseries VARCHAR(255),
-    Pays_Brasseries VARCHAR(255),
-    Date_de_Création_Brasseries DATETIME,
-    Date_de_Modification_Brasseries DATETIME,
-    PRIMARY KEY (ID_Brasseries)
+DROP TABLE IF EXISTS brewery;
+CREATE TABLE brewery (
+    ID_brewery INT AUTO_INCREMENT NOT NULL,
+    Name_brewery VARCHAR(255),
+    Country_brewery VARCHAR(144),
+    Creation_Date_brewery DATETIME,
+    Modification_Date_brewery DATETIME,
+    PRIMARY KEY (ID_brewery)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Avis;
-CREATE TABLE Avis (
-    ID_Avis INT AUTO_INCREMENT NOT NULL,
-    Note_Avis DECIMAL,
-    Commentaire_Avis TEXT,
-    Date_de_Création_Avis DATETIME,
-    Date_de_Modification_Avis DATETIME,
-    PRIMARY KEY (ID_Avis)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS Photos;
-CREATE TABLE Photos (
-    ID_Photos INT AUTO_INCREMENT NOT NULL,
+DROP TABLE IF EXISTS photo;
+CREATE TABLE photo (
+    ID_photo INT AUTO_INCREMENT NOT NULL,
     URL_Photos VARCHAR(500),
-    Date_de_Création_Photos DATETIME,
-    Date_de_Modification_Photos DATETIME,
-    PRIMARY KEY (ID_Photos)
+    Creation_Date_photo DATETIME,
+    Modification_Date_photo DATETIME,
+    ID_beer INT, -- Remplacez par le nom de votre colonne réelle ou une contrainte de clé étrangère
+    PRIMARY KEY (ID_photo)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Utilisateurs_Bieres;
-CREATE TABLE Utilisateurs_Bieres (
-    ID_Utilisateurs INT AUTO_INCREMENT NOT NULL,
-    ID_Bieres INT NOT NULL,
-    ID_Utilisateurs_Bieres INT,
-    ID_Bieres_Utilisateurs_Bieres INT,
-    ID_Utilisateurs_Utilisateurs_Bieres INT,
-    Nom_Bieres_Utilisateurs_Bieres VARCHAR(144),
-    PRIMARY KEY (ID_Utilisateurs, ID_Bieres)
+DROP TABLE IF EXISTS likes;
+CREATE TABLE likes (
+    ID_users INT AUTO_INCREMENT NOT NULL,
+    ID_beer INT NOT NULL,
+    PRIMARY KEY (ID_users, ID_beer),
+    FOREIGN KEY (ID_users) REFERENCES users (ID_users),
+    FOREIGN KEY (ID_beer) REFERENCES beer (ID_beer)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Bieres_Ingredients;
-CREATE TABLE Bieres_Ingredients (
-    ID_Bieres INT AUTO_INCREMENT NOT NULL,
-    ID_Ingrédients INT NOT NULL,
-    ID_Bieres_Ingredients INT,
-    ID_Bieres_Bieres_Ingredients INT,
-    ID_Ingredients_Bieres_Ingredients INT,
-    PRIMARY KEY (ID_Bieres, ID_Ingrédients)
+DROP TABLE IF EXISTS comment;
+CREATE TABLE comment (
+    ID_users INT AUTO_INCREMENT NOT NULL,
+    ID_beer INT NOT NULL,
+    ID_comment INT,
+    Comment_comment TEXT,
+    note_comment NUMERIC,
+    Creation_Date_comment DATETIME,
+    Modification_Date_comment DATETIME,
+    PRIMARY KEY (ID_users, ID_beer),
+    FOREIGN KEY (ID_users) REFERENCES users (ID_users),
+    FOREIGN KEY (ID_beer) REFERENCES beer (ID_beer)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Bieres_Categories;
-CREATE TABLE Bieres_Categories (
-    ID_Bieres INT AUTO_INCREMENT NOT NULL,
-    ID_Catégories_Bieres INT NOT NULL,
-    ID_Bieres_Categories INT,
-    ID_Bieres_Bieres_Categories INT,
-    ID_Categories_Bieres_Bieres_Categories INT,
-    PRIMARY KEY (ID_Bieres, ID_Catégories_Bieres)
+DROP TABLE IF EXISTS contain;
+CREATE TABLE contain (
+    ID_beer INT AUTO_INCREMENT NOT NULL,
+    ID_ingredient INT NOT NULL,
+    PRIMARY KEY (ID_beer, ID_ingredient),
+    FOREIGN KEY (ID_beer) REFERENCES beer (ID_beer),
+    FOREIGN KEY (ID_ingredient) REFERENCES ingredient (ID_ingredient)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS Favoris;
-CREATE TABLE Favoris (
-    ID_Utilisateurs INT AUTO_INCREMENT NOT NULL,
-    ID_Bieres INT NOT NULL,
-    ID_Favoris INT,
-    ID_Utilisateur_Favoris INT,
-    ID_Bieres_Favoris INT,
-    PRIMARY KEY (ID_Utilisateurs, ID_Bieres)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS Bieres_Brasseries;
-CREATE TABLE Bieres_Brasseries (
-    ID_Bieres INT AUTO_INCREMENT NOT NULL,
-    ID_Brasseries INT NOT NULL,
-    ID_Bieres_Brasseries INT,
-    ID_Bieres_Bieres_Brasseries INT,
-    ID_Brasseries_Bieres_Brasseries INT,
-    PRIMARY KEY (ID_Bieres, ID_Brasseries)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS Utilisateurs_Avis;
-CREATE TABLE Utilisateurs_Avis (
-    ID_Utilisateurs INT AUTO_INCREMENT NOT NULL,
-    ID_Avis INT NOT NULL,
-    ID_Utilisateurs_Avis INT,
-    ID_Avis_Utilisateurs_Avis INT,
-    ID_Utilisateurs_Utilisateurs_Avis INT,
-    PRIMARY KEY (ID_Utilisateurs, ID_Avis)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS Avis_Bieres;
-CREATE TABLE Avis_Bieres (
-    ID_Avis INT AUTO_INCREMENT NOT NULL,
-    ID_Bieres INT NOT NULL,
-    ID_Avis_Bieres INT,
-    ID_Bieres_Avis_Bieres INT,
-    ID_Avis_Avis_Bieres INT,
-    PRIMARY KEY (ID_Avis, ID_Bieres)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS Photos_Bieres;
-CREATE TABLE Photos_Bieres (
-    ID_Photos INT AUTO_INCREMENT NOT NULL,
-    ID_Bieres INT NOT NULL,
-    ID_Photos_Bieres INT,
-    ID_Photos_Photos_Bieres INT,
-    ID_Bieres_Photos_Bieres INT,
-    PRIMARY KEY (ID_Photos, ID_Bieres)
-) ENGINE=InnoDB;
-
-ALTER TABLE Utilisateurs_Bieres ADD CONSTRAINT FK_Utilisateurs_Bieres_ID_Utilisateurs FOREIGN KEY (ID_Utilisateurs) REFERENCES Utilisateurs (ID_Utilisateurs);
-ALTER TABLE Utilisateurs_Bieres ADD CONSTRAINT FK_Utilisateurs_Bieres_ID_Bieres FOREIGN KEY (ID_Bieres) REFERENCES Bieres (ID_Bieres);
-
-ALTER TABLE Bieres_Ingredients ADD CONSTRAINT FK_Bieres_Ingredients_ID_Bieres FOREIGN KEY (ID_Bieres) REFERENCES Bieres (ID_Bieres);
-ALTER TABLE Bieres_Ingredients ADD CONSTRAINT FK_Bieres_Ingredients_ID_Ingrédients FOREIGN KEY (ID_Ingrédients) REFERENCES Ingredients (ID_Ingrédients);
-
-ALTER TABLE Bieres_Categories ADD CONSTRAINT FK_Bieres_Categories_ID_Bieres FOREIGN KEY (ID_Bieres) REFERENCES Bieres (ID_Bieres);
-ALTER TABLE Bieres_Categories ADD CONSTRAINT FK_Bieres_Categories_ID_Catégories_Bieres FOREIGN KEY (ID_Catégories_Bieres) REFERENCES Categories_Bieres (ID_Catégories_Bieres);
-
-ALTER TABLE Favoris ADD CONSTRAINT FK_Favoris_ID_Utilisateurs FOREIGN KEY (ID_Utilisateurs) REFERENCES Utilisateurs (ID_Utilisateurs);
-ALTER TABLE Favoris ADD CONSTRAINT FK_Favoris_ID_Bieres FOREIGN KEY (ID_Bieres) REFERENCES Bieres (ID_Bieres);
-
-ALTER TABLE Bieres_Brasseries ADD CONSTRAINT FK_Bieres_Brasseries_ID_Bieres FOREIGN KEY (ID_Bieres) REFERENCES Bieres (ID_Bieres);
-ALTER TABLE Bieres_Brasseries ADD CONSTRAINT FK_Bieres_Brasseries_ID_Brasseries FOREIGN KEY (ID_Brasseries) REFERENCES Brasseries (ID_Brasseries);
-
-ALTER TABLE Utilisateurs_Avis ADD CONSTRAINT FK_Utilisateurs_Avis_ID_Utilisateurs FOREIGN KEY (ID_Utilisateurs) REFERENCES Utilisateurs (ID_Utilisateurs);
-ALTER TABLE Utilisateurs_Avis ADD CONSTRAINT FK_Utilisateurs_Avis_ID_Avis FOREIGN KEY (ID_Avis) REFERENCES Avis (ID_Avis);
-
-ALTER TABLE Avis_Bieres ADD CONSTRAINT FK_Avis_Bieres_ID_Avis FOREIGN KEY (ID_Avis) REFERENCES Avis (ID_Avis);
-ALTER TABLE Avis_Bieres ADD CONSTRAINT FK_Avis_Bieres_ID_Bieres FOREIGN KEY (ID_Bieres) REFERENCES Bieres (ID_Bieres);
-
-ALTER TABLE Photos_Bieres ADD CONSTRAINT FK_Photos_Bieres_ID_Photos FOREIGN KEY (ID_Photos) REFERENCES Photos (ID_Photos);
-ALTER TABLE Photos_Bieres ADD CONSTRAINT FK_Photos_Bieres_ID_Bieres FOREIGN KEY (ID_Bieres) REFERENCES Bieres (ID_Bieres);
-
+ALTER TABLE beer ADD CONSTRAINT FK_beer_ID_brewery FOREIGN KEY (ID_brewery) REFERENCES brewery (ID_brewery);
+ALTER TABLE beer ADD CONSTRAINT FK_beer_ID_beer_category FOREIGN KEY (ID_beer_category) REFERENCES beer_category (ID_beer_category);
+ALTER TABLE photo ADD CONSTRAINT FK_photo_ID_beer FOREIGN KEY (ID_beer) REFERENCES beer (ID_beer);
+ALTER TABLE likes ADD CONSTRAINT FK_like_ID_users FOREIGN KEY (ID_users) REFERENCES users (ID_users);
+ALTER TABLE likes ADD CONSTRAINT FK_like_ID_beer FOREIGN KEY (ID_beer) REFERENCES beer (ID_beer);
+ALTER TABLE comment ADD CONSTRAINT FK_comment_ID_users FOREIGN KEY (ID_users) REFERENCES users (ID_users);
+ALTER TABLE comment ADD CONSTRAINT FK_comment_ID_beer FOREIGN KEY (ID_beer) REFERENCES beer (ID_beer);
+ALTER TABLE contain ADD CONSTRAINT FK_contain_ID_beer FOREIGN KEY (ID_beer) REFERENCES beer (ID_beer);
+ALTER TABLE contain ADD CONSTRAINT FK_contain_ID_ingredient FOREIGN KEY (ID_ingredient) REFERENCES ingredient (ID_ingredient);
