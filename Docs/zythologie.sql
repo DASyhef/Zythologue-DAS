@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : mar. 26 mars 2024 à 13:51
+-- Généré le : mar. 26 mars 2024 à 15:07
 -- Version du serveur : 8.2.0
 -- Version de PHP : 8.2.8
 
@@ -20,6 +20,33 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `zythologie`
 --
+
+DELIMITER $$
+--
+-- Procédures
+--
+CREATE DEFINER=`root`@`%` PROCEDURE `NoterBiere` (IN `p_ID_users` INT, IN `p_ID_beer` INT, IN `p_note` DECIMAL(10,0))   BEGIN
+    DECLARE v_existing_note DECIMAL(10,0);
+
+    -- Vérifier si l'utilisateur a déjà noté cette bière
+    SELECT note_comment INTO v_existing_note
+    FROM comment
+    WHERE ID_users = p_ID_users AND ID_beer = p_ID_beer;
+
+    IF v_existing_note IS NOT NULL THEN
+        -- Mettre à jour la note existante
+        UPDATE comment
+        SET note_comment = p_note,
+            Modification_Date_comment = NOW()
+        WHERE ID_users = p_ID_users AND ID_beer = p_ID_beer;
+    ELSE
+        -- Insérer une nouvelle note
+        INSERT INTO comment (ID_users, ID_beer, note_comment, Creation_Date_comment)
+        VALUES (p_ID_users, p_ID_beer, p_note, NOW());
+    END IF;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -47,6 +74,18 @@ INSERT INTO `beer` (`ID_beer`, `Name_beer`, `Description_Bieres`, `ABV_Bieres`, 
 (2, 'Leffe Blonde', 'La Leffe Blonde est une bière de couleur dorée avec un arôme fruité et une saveur douce et équilibrée.', 7, '2024-03-26 10:32:25', NULL, 2, 2),
 (3, 'Duvel', 'La Duvel est une ale belge rafraîchissante, avec des notes de fruits, d\'épices et une amertume subtile, complétée par une finale sèche et piquante.', 9, '2024-03-26 10:47:44', '2024-03-26 10:47:44', 3, 3),
 (4, 'Chimay Bleue', 'La Chimay Bleue est une bière trappiste puissante et complexe, offrant des arômes de fruits mûrs, de caramel et d\'épices, avec une finale chaleureuse.', 9, '2024-03-26 11:56:41', NULL, 4, 2);
+
+--
+-- Déclencheurs `beer`
+--
+DELIMITER $$
+CREATE TRIGGER `Check_ABV` BEFORE INSERT ON `beer` FOR EACH ROW BEGIN
+    IF NEW.ABV_Bieres < 0 OR NEW.ABV_Bieres > 20 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Le taux d'alcool (ABV) doit être compris entre 0 et 20";
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -309,7 +348,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `beer`
 --
 ALTER TABLE `beer`
-  MODIFY `ID_beer` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID_beer` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT pour la table `beer_category`
