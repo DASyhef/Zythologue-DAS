@@ -31,6 +31,8 @@ SELECT b.*, i.Name_ingredient
 FROM beer b
 INNER JOIN contain c ON b.ID_beer = c.ID_beer
 INNER JOIN ingredient i ON c.ID_ingredient = i.ID_ingredient;
+-- sélection des bières contenant un ingrédient particulier
+-- WHERE i.Name_ingredient = 'sucre';
 
 8- Afficher les brasseries et le nombre de bières qu'elles produisent, pour celles ayant plus de 5 bières :
 SELECT br.*, COUNT(b.ID_beer) AS Nombre_de_bieres
