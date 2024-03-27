@@ -9,6 +9,11 @@ GROUP BY bc.Name_beer_category;
 
 3- Trouver toutes les bières d'une brasserie donnée :
 SELECT * FROM beer WHERE ID_brewery = <ID_de_la_brasserie>;
+ou
+SELECT beer.*
+FROM beer
+JOIN brewery ON beer.ID_brewery = brewery.ID_brewery
+WHERE brewery.Name_brewery = 'Nom_de_la_brasserie';
 
 4- Lister les utilisateurs et le nombre de bières qu'ils ont ajoutées à leurs favoris :
 SELECT u.Name_users, COUNT(l.ID_beer) AS Nombre_de_bieres_favorites
@@ -27,12 +32,11 @@ INNER JOIN brewery br ON b.ID_brewery = br.ID_brewery
 ORDER BY br.Country_brewery;
 
 7- Lister les bières avec leurs ingrédients :
-SELECT b.*, i.Name_ingredient
+SELECT b.*
 FROM beer b
 INNER JOIN contain c ON b.ID_beer = c.ID_beer
-INNER JOIN ingredient i ON c.ID_ingredient = i.ID_ingredient;
--- sélection des bières contenant un ingrédient particulier
--- WHERE i.Name_ingredient = 'sucre';
+INNER JOIN ingredient i ON c.ID_ingredient = i.ID_ingredient
+WHERE i.Name_ingredient = 'Sucre Candi';
 
 8- Afficher les brasseries et le nombre de bières qu'elles produisent, pour celles ayant plus de 5 bières :
 SELECT br.*, COUNT(b.ID_beer) AS Nombre_de_bieres
